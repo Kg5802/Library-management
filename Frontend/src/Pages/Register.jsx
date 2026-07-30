@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addUser } from "../../service/userService";
+import { addUser } from "../service/userService";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Register() {
