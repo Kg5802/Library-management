@@ -7,7 +7,7 @@ export default function Register() {
     uname: "",
     email: "",
     password: "",
-    role: "user" // fixed role
+    role: "user" // default role
   });
   const navigate = useNavigate();
 
@@ -51,7 +51,15 @@ export default function Register() {
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
 
-        {/* Role is fixed as "user", so dropdown removed */}
+        {/* Role dropdown */}
+        <select
+          value={form.role}
+          className="w-full border rounded px-3 py-2 mb-4 focus:ring-2 focus:ring-indigo-500"
+          onChange={(e) => setForm({ ...form, role: e.target.value })}
+        >
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
 
         <button
           type="submit"
