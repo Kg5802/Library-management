@@ -1,7 +1,9 @@
-Library Management System  
+Library Management System  :- 
+
 A full‑stack application built with React (frontend) and Spring Boot (backend) to manage books, users, and assignments in a digital library.
 
-🔑 Features
+🔑 Features :-
+
 User Management → Register, login, update, and delete users with role‑based access (Admin/User).
 
 Book Management → Add, update, view, and delete books.
@@ -14,7 +16,8 @@ User Dashboard → Users can view borrowed books, check status, and manage their
 
 Admin Dashboard → Admins can manage books, users, and assignments.
 
-🛠️ Tech Stack
+🛠️ Tech Stack :-
+
 Frontend: React, TailwindCSS, Axios, React Router
 
 Backend: Spring Boot, REST APIs
