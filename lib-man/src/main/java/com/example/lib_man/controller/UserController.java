@@ -59,7 +59,7 @@ public class UserController {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
 
-    
+
     @GetMapping("/{userid}/assigned-books")
     public ResponseEntity<List<Assign>> getAssignedBooks(@PathVariable int userid) {
         return ResponseEntity.ok(assignService.getAssignedBooksByUser(userid));

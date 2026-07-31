@@ -3,6 +3,7 @@ import { assignBook } from "../../service/assignService";
 import { getUsers } from "../../service/userService";
 import { getBooks } from "../../service/bookService";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function AssignBook() {
   const [users, setUsers] = useState([]);
@@ -15,20 +16,31 @@ export default function AssignBook() {
   }, []);
 
   const fetchData = async () => {
-    const { data: userData } = await getUsers();
-    const { data: bookData } = await getBooks();
-    setUsers(userData);
-    setBooks(bookData);
+    try {
+      const { data: userData } = await getUsers();
+      const { data: bookData } = await getBooks();
+      setUsers(userData);
+      setBooks(bookData);
+    } catch (error) {
+      toast.error("Failed to load users or books.");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.userid || !form.bid) {
-      alert("Please select both user and book.");
+      toast.error("Please select both user and book.");
       return;
     }
-    await assignBook(form); // sends POST /assign/{userid}/{bid}
-    navigate("/admin/assign-list");
+
+    try {
+      const loadingToast = toast.loading("Assigning book...");
+      await assignBook(form); // sends POST /assign/{userid}/{bid}
+      toast.success("Book assigned successfully!", { id: loadingToast });
+      navigate("/admin/assign-list");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to assign book.");
+    }
   };
 
   return (

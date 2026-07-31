@@ -39,6 +39,13 @@ public class AdminController {
         return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
     }
 
+    @PutMapping("/book/{bid}")
+    public ResponseEntity<Book> updateBook(@PathVariable int bid, @RequestBody Book book) {
+        Book updatedBook = bservice.updateBook(bid, book);
+        return new ResponseEntity<>(updatedBook, HttpStatus.OK);
+    }
+
+
     @DeleteMapping("/book/{bid}")
     public ResponseEntity<String> deleteBook(@PathVariable int bid) {
         bservice.deleteBooks(bid);
@@ -53,6 +60,7 @@ public class AdminController {
 
     @PostMapping("/user")
     public ResponseEntity<Users> addUser(@RequestBody Users user) {
+
         Users savedUser = userService.addUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }

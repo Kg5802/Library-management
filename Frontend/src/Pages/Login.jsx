@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../service/userService";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -8,12 +9,17 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { data } = await loginUser(form);
-    if (data) {
-      localStorage.setItem("user", JSON.stringify(data));
-      navigate(data.role === "admin" ? "/admin/dashboard" : "/user/dashboard");
-    } else {
-      alert("Invalid credentials");
+    try {
+      const { data } = await loginUser(form);
+      if (data) {
+        localStorage.setItem("user", JSON.stringify(data));
+        toast.success("Login successful!");
+        navigate(data.role === "admin" ? "/admin/dashboard" : "/user/dashboard");
+      } else {
+        toast.error("Invalid credentials");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed.");
     }
   };
 

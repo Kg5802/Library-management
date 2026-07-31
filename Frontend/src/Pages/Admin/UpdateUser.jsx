@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUserById, updateUser } from "../../service/userService";
+import toast from "react-hot-toast";
 
 export default function UpdateUser() {
   const { id } = useParams(); // user id from route
@@ -17,15 +18,29 @@ export default function UpdateUser() {
   }, []);
 
   const fetchUser = async () => {
-    const { data } = await getUserById(id);
-    setForm(data);
+    try {
+      const { data } = await getUserById(id);
+      setForm(data);
+    } catch (error) {
+      toast.error("Failed to load user details.");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateUser(id, form);
-    alert("User updated successfully!");
-    navigate("/admin/users");
+    if (!form.uname || !form.email || !form.password) {
+      toast.error("Please fill all fields.");
+      return;
+    }
+
+    try {
+      const loadingToast = toast.loading("Updating user...");
+      await updateUser(id, form);
+      toast.success("User updated successfully!", { id: loadingToast });
+      navigate("/admin/users");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update user.");
+    }
   };
 
   return (
@@ -41,26 +56,26 @@ export default function UpdateUser() {
           type="text"
           value={form.uname}
           placeholder="Name"
-          className="w-full border rounded px-3 py-2 mb-4"
+          className="w-full border rounded px-3 py-2 mb-4 focus:ring-2 focus:ring-indigo-500"
           onChange={(e) => setForm({ ...form, uname: e.target.value })}
         />
         <input
           type="email"
           value={form.email}
           placeholder="Email"
-          className="w-full border rounded px-3 py-2 mb-4"
+          className="w-full border rounded px-3 py-2 mb-4 focus:ring-2 focus:ring-indigo-500"
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
         <input
           type="password"
           value={form.password}
           placeholder="Password"
-          className="w-full border rounded px-3 py-2 mb-4"
+          className="w-full border rounded px-3 py-2 mb-4 focus:ring-2 focus:ring-indigo-500"
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
         <select
           value={form.role}
-          className="w-full border rounded px-3 py-2 mb-4"
+          className="w-full border rounded px-3 py-2 mb-4 focus:ring-2 focus:ring-indigo-500"
           onChange={(e) => setForm({ ...form, role: e.target.value })}
         >
           <option value="user">User</option>

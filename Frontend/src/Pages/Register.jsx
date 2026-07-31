@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addUser } from "../service/userService";
 import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -14,12 +15,18 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.uname || !form.email || !form.password) {
-      alert("Please fill all fields.");
+      toast.error("Please fill all fields.");
       return;
     }
-    await addUser(form);
-    alert("Registration successful! Please login.");
-    navigate("/login");
+
+    try {
+      const loadingToast = toast.loading("Registering user...");
+      await addUser(form);
+      toast.success("Registration successful! Please login.", { id: loadingToast });
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Registration failed.");
+    }
   };
 
   return (
